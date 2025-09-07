@@ -32,11 +32,7 @@ jobs:
 
       - name: Set PUBLIC_URL for GitHub Pages
         run: |
-          if [ "${{ github.event.repository.name }}" = "${{ github.repository_owner }}.github.io" ]; then
-            echo "PUBLIC_URL=https://${{ github.repository_owner }}.github.io" >> $GITHUB_ENV
-          else
-            echo "PUBLIC_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" >> $GITHUB_ENV
-          fi
+          echo "PUBLIC_URL=https://${{ github.repository_owner }}.github.io/" >> $GITHUB_ENV
 
       - name: Update Browserslist DB (optional)
         run: npx --yes update-browserslist-db@latest || true
