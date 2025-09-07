@@ -8,8 +8,8 @@ export const initialTracks = [
       'https://drive.google.com/file/d/1t_Mye8yOI_btbwFE4z_SCAgUeX8u5wI1/preview',
     duration: 322.612245,
     metaData: {
-      title: 'Heroines',
-      artist: 'Diablo Swing Orchestra',
+      title: 'yesu - have fun remix',
+      artist: 'me',
       album,
     },
   },

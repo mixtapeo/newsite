@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import hthBanner from '../../../assets/banners/hth.png';
+import synfinyBanner from '../../../assets/banners/synfiny.jpg';
 
 // Simple, data-driven portfolio cards app.
 // You can pass a custom `items` prop or edit the defaultItems below.
@@ -7,12 +9,47 @@ export default function Portfolio({ items }) {
   const defaultItems = [
     // Projects
     {
+      title: 'Capital Technology Networks — VP Software',
+      description:
+        'Led 2025 UI refresh for Track the Hack; reworked registration/admission/scheduling workflows; built an automated photo booth with email; contributed to HackTheHill III website.',
+      background: hthBanner,
+      tags: ['Leadership', 'Web', 'Automation', 'UI/UX'],
+      type: 'project',
+      date: "June '25 - Present",
+    },
+    {
+      title: 'Data Augmentation Research — Carleton University',
+      description:
+        'Boosted YOLOv8-nano to 99.8% top-5 on CIFAR-10 with 99.2% validity via custom Fast AutoAugment policies; co-developing a whitepaper.',
+      tags: ['Computer Vision', 'AutoAugment', 'Research'],
+      type: 'project',
+      date: "February '25 - Present",
+    },
+    {
+      title: 'Quanser ACC 2025 Self-Driving Competition — Participant',
+      description:
+        'Co-developed navigation algorithms, ROS nodes, lane detection/discipline, and image processing for Stage 2.',
+      tags: ['ROS', 'Autonomous Driving', 'Computer Vision'],
+      type: 'project',
+      date: "June '25 - July '25",
+    },
+    {
       title: 'ResumeGPT — AI Resume Chatbot',
       description:
         'AI-powered chatbot that processes and summarizes resumes with conversation context. Integrated WildApricot API and OpenAI API; deployed on AWS EC2 (Flask + Gunicorn + Nginx) with cron-based maintenance.',
+      date: "June '25",
       repo: 'https://github.com/mixtapeo/ResumeGPT',
       tags: ['Python', 'Flask', 'OpenAI', 'AWS', 'Automation'],
       type: 'project',
+    },
+    {
+      title: 'PepInvent Modified — Peptide Design',
+      description:
+        'Implemented and customized a deep-learning framework for de novo peptide design to meet project-specific needs; presented findings to faculty.',
+      repo: 'https://github.com/mixtapeo/PepInvent-Modified',
+      tags: ['Deep Learning', 'Bioinformatics', 'Python'],
+      type: 'project',
+      date: "February '25 - May '25",
     },
     {
       title: 'Closet Companion — HackTheHill II',
@@ -28,38 +65,19 @@ export default function Portfolio({ items }) {
         'MySQL',
       ],
       type: 'project',
-    },
-    {
-      title: 'PepInvent Modified — Peptide Design',
-      description:
-        'Implemented and customized a deep-learning framework for de novo peptide design to meet project-specific needs; presented findings to faculty.',
-      repo: 'https://github.com/mixtapeo/PepInvent-Modified',
-      tags: ['Deep Learning', 'Bioinformatics', 'Python'],
-      type: 'project',
-    },
-    {
-      title: 'Capital Technology Networks — VP Software',
-      description:
-        'Led 2025 UI refresh for Track the Hack; reworked registration/admission/scheduling workflows; built an automated photo booth with email; contributed to HackTheHill III website.',
-      tags: ['Leadership', 'Web', 'Automation', 'UI/UX'],
-      type: 'project',
-    },
-    {
-      title: 'Data Augmentation Research — Carleton University',
-      description:
-        'Boosted YOLOv8-nano to 99.8% top-5 on CIFAR-10 with 99.2% validity via custom Fast AutoAugment policies; co-developing a whitepaper.',
-      tags: ['Computer Vision', 'AutoAugment', 'Research'],
-      type: 'project',
-    },
-    {
-      title: 'Quanser ACC 2025 Self-Driving Competition — Participant',
-      description:
-        'Co-developed navigation algorithms, ROS nodes, lane detection/discipline, and image processing for Stage 2.',
-      tags: ['ROS', 'Autonomous Driving', 'Computer Vision'],
-      type: 'project',
+      date: "September '24",
     },
 
     // Positions
+    {
+      title: 'Global Head of IT — SynFiny Advisors',
+      description:
+        'Owned IT security and infrastructure; managed identity/access in Microsoft Entra; optimized Office 365 licensing; ran phishing simulations; drove security decisions; day-to-day IT support. Jun 2025–Present · Remote, USA',
+      background: synfinyBanner,
+      tags: ['IT', 'Security', 'Microsoft Entra', 'Office 365'],
+      type: 'position',
+      date: "June '25 - Present",
+    },
     {
       title: 'Software Engineering Intern — Infras',
       description:
@@ -68,21 +86,7 @@ export default function Portfolio({ items }) {
         'https://cdn.prod.website-files.com/67b4b38e2d5645738ce41c68/68b9f6a16d7921b0bf40453a_img_0.png',
       tags: ['Playwright', 'Jenkins', 'Test Automation'],
       type: 'position',
-    },
-    {
-      title: 'Global Head of IT — SynFiny Advisors',
-      description:
-        'Owned IT security and infrastructure; managed identity/access in Microsoft Entra; optimized Office 365 licensing; ran phishing simulations; drove security decisions; day-to-day IT support. Jun 2025–Present · Remote, USA',
-        background: "/src/assets/banners/synfiny.jpg",
-      tags: ['IT', 'Security', 'Microsoft Entra', 'Office 365'],
-      type: 'position',
-    },
-    {
-      title: 'Engineering Intern — SynFiny Advisors',
-      description:
-        'Designed and deployed ResumeGPT on AWS; integrated WildApricot for automated resume ingestion; maintained codebase and roadmap; stakeholder communications. Jul–Sep 2024 · Remote, USA',
-      tags: ['Python', 'AWS', 'APIs', 'Flask'],
-      type: 'position',
+      date: "March '25 - September '25",
     },
     {
       title: 'Technical Specialist — Mobile Klinik',
@@ -90,6 +94,15 @@ export default function Portfolio({ items }) {
         'Samsung & Apple Certified; WISE L1. Repaired phones, tablets, laptops, and consoles; handled tickets and customers. Jun 2024–Jun 2025 · Ottawa, ON',
       tags: ['Hardware Repair', 'Customer Support', 'Certification'],
       type: 'position',
+      date: "June '24 - June '25",
+    },
+    {
+      title: 'Engineering Intern — SynFiny Advisors',
+      description:
+        'Designed and deployed ResumeGPT on AWS; integrated WildApricot for automated resume ingestion; maintained codebase and roadmap; stakeholder communications. Jul–Sep 2024 · Remote, USA',
+      tags: ['Python', 'AWS', 'APIs', 'Flask'],
+      type: 'position',
+      date: "July '24 - September '24",
     },
   ];
   const data = items && items.length ? items : defaultItems;
@@ -98,12 +111,16 @@ export default function Portfolio({ items }) {
   const itemsWithType = (data || []).map(d => {
     if (d.type) return d;
     const isPosition = /intern|head|specialist|advisor|it|klinik|infras|synfiny/i.test(
-      (d.title || '')
+      d.title || '',
     );
     return { ...d, type: isPosition ? 'position' : 'project' };
   });
-  const projects = itemsWithType.map((c, i) => ({ c, i })).filter(x => x.c.type === 'project');
-  const positions = itemsWithType.map((c, i) => ({ c, i })).filter(x => x.c.type === 'position');
+  const projects = itemsWithType
+    .map((c, i) => ({ c, i }))
+    .filter(x => x.c.type === 'project');
+  const positions = itemsWithType
+    .map((c, i) => ({ c, i }))
+    .filter(x => x.c.type === 'position');
 
   // Expanded view state
   const [activeIdx, setActiveIdx] = useState(null);
@@ -189,6 +206,7 @@ export default function Portfolio({ items }) {
                     )}
                   </Actions>
                 </Body>
+                {c.date && <DateTag $onImage={Boolean(bg)}>{c.date}</DateTag>}
               </Card>
             );
           })}
@@ -240,6 +258,7 @@ export default function Portfolio({ items }) {
                     )}
                   </Actions>
                 </Body>
+                {c.date && <DateTag $onImage={Boolean(bg)}>{c.date}</DateTag>}
               </Card>
             );
           })}
@@ -342,7 +361,8 @@ const Card = styled.div`
   overflow: hidden;
   min-height: 170px;
   ${p =>
-    p.$bg && `
+    p.$bg &&
+    `
     &::before {
       content: '';
       position: absolute;
@@ -397,6 +417,20 @@ const Tag = styled.span`
   border: 1px solid #96abff;
   padding: 1px 6px;
   border-radius: 10px;
+`;
+
+const DateTag = styled.div`
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  pointer-events: none;
+  color: ${p => (p.$onImage ? '#fff' : '#0c327d')};
+  background: ${p => (p.$onImage ? 'rgba(0,0,0,0.55)' : '#e6efff')};
+  border: 1px solid ${p => (p.$onImage ? 'rgba(255,255,255,0.35)' : '#96abff')};
+  text-shadow: ${p => (p.$onImage ? '0 1px 2px rgba(0,0,0,0.6)' : 'none')};
 `;
 
 const Actions = styled.div`
