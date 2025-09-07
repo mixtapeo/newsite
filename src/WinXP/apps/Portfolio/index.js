@@ -165,16 +165,6 @@ export default function Portfolio({ items }) {
     setActiveIdx(null);
   }
 
-  function handleEditChange(e) {
-    if (activeIdx == null) return;
-    const k = getKey(activeIdx);
-    const next = { ...notes, [k]: e.target.value };
-    setNotes(next);
-    try {
-      localStorage.setItem('portfolioNotes', JSON.stringify(next));
-    } catch {}
-  }
-
   return (
     <Container>
       <ScrollArea>

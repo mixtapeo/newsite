@@ -8,6 +8,7 @@ import Paint from './Paint';
 import Resume from './Resume';
 import CreditsTxt from './CreditsTxt';
 import Portfolio from './Portfolio';
+import portfolio from 'assets/windowsIcons/pr.png';
 import iePaper from 'assets/windowsIcons/ie-paper.png';
 import ie from 'assets/windowsIcons/ie.png';
 import mine from 'assets/minesweeper/mine-icon.png';
@@ -175,7 +176,7 @@ export const defaultIconState = [
   },
   {
     id: 8,
-    icon: computerLarge,
+    icon: portfolio,
     title: 'portfolio.exe',
     component: Portfolio,
     isFocus: false,
@@ -359,7 +360,7 @@ export const appSettings = {
   },
   'portfolio.exe': {
     header: {
-      icon: computer,
+      icon: portfolio,
       title: 'portfolio.exe',
     },
     component: Portfolio,

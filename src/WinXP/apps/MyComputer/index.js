@@ -26,6 +26,7 @@ import logo from 'assets/github-logo.png';
 import mine from 'assets/minesweeper/mine-icon.png';
 import windows from 'assets/windowsIcons/windows.png';
 import docLarge from 'assets/windowsIcons/doc.png'; 
+import portfolio from 'assets/windowsIcons/pr2.png';
 
 function MyComputer({ onClose, openApp }) {
   function onClickOptionItem(item) {
@@ -376,7 +377,7 @@ function MyComputer({ onClose, openApp }) {
                 >
                   <img
                     className="com__content__right__card__img"
-                    src="https://a.ppy.sh/2926513_1448497605.png"
+                    src= {portfolio}
                     alt="Portfolio"
                   />
                   <div className="com__content__right__card__text">
