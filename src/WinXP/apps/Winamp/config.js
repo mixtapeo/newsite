@@ -2,125 +2,164 @@
 
 const album = 'netBloc Vol. 24: tiuqottigeloot';
 
-export const initialTracks = [
+// Optional Cloudflare Worker proxy for CORS/caching
+// Set REACT_APP_CF_PROXY to your worker URL.
+// Supported formats:
+//  - "https://<worker>/fetch?url={url}" (use {url} placeholder)
+//  - "https://<worker>" (defaults to appending "/fetch?url=..." with encoded target URL)
+const CF_PROXY = process.env.REACT_APP_CF_PROXY || '';
+const proxyUrl = url => {
+  if (!CF_PROXY) return url;
+  if (CF_PROXY.includes('{url}'))
+    return CF_PROXY.replace('{url}', encodeURIComponent(url));
+  const base = CF_PROXY.endsWith('/') ? CF_PROXY.slice(0, -1) : CF_PROXY;
+  return `${base}/fetch?url=${encodeURIComponent(url)}`;
+};
+
+// Allow overriding audio host with a public R2 domain (or any CDN)
+// Examples:
+//  - REACT_APP_AUDIO_BASE=https://pub-xxxx.r2.dev
+//  - Use placeholder in track URL: "{Audio_Base}/path/to/file.mp3"
+const AUDIO_BASE =
+  process.env.REACT_APP_AUDIO_BASE || process.env.REACT_APP_R2_BASE || '';
+const joinBase = (base, key) => {
+  const b = base.endsWith('/') ? base.slice(0, -1) : base;
+  const parts = String(key)
+    .split('/')
+    .filter(Boolean)
+    .map(encodeURIComponent);
+  return `${b}/${parts.join('/')}`;
+};
+const withBase = url => {
+  // Support "{Audio_Base}/..." placeholder in config
+  const m = /^\{Audio_Base\}\/(.+)$/i.exec(url || '');
+  if (m) {
+    if (!AUDIO_BASE) return url; // env not set; leave as-is
+    return joinBase(AUDIO_BASE, m[1]);
+  }
+  if (!AUDIO_BASE) return url;
+  try {
+    const name = new URL(url).pathname.split('/').pop() || '';
+    // Only remap known media files; leave others (e.g., Google Drive preview) untouched
+    if (!/\.(mp3|ogg|wav)$/i.test(name)) return url;
+    return joinBase(AUDIO_BASE, name);
+  } catch (_) {
+    // If it's a bare filename or relative path, join with base
+    if (/^(?:[^:]+)\.(mp3|ogg|wav)$/i.test(url))
+      return joinBase(AUDIO_BASE, url);
+    return url;
+  }
+};
+
+// Raw tracks list; URLs will be proxied at export time if CF proxy is configured
+const rawTracks = [
   {
-    url:
-      'https://drive.google.com/file/d/1t_Mye8yOI_btbwFE4z_SCAgUeX8u5wI1/preview',
-    duration: 322.612245,
+    url: '',
+    duration: 0,
+    metaData: { title: "enjoy!", artist: "songs i've made :)", album },
+  },
+  {
+    url: '{Audio_Base}/yesu - have fun remix.mp3',
+    duration: 96,
+    metaData: { title: 'yesu - have fun remix', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/ash - lesserafim remix.mp3',
+    metaData: { title: 'ash - lesserafim remix', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/degenrock ft. teto.mp3',
+    metaData: { title: 'degenrock ft. teto', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/DERO (OTACHOC Remix).mp3',
+    metaData: { title: 'DERO (OTACHOC Remix)', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/e.t..mp3',
+    metaData: { title: 'e.t.', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/e2.mp3',
+    metaData: { title: 'e2', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/erd tree.mp3',
+    metaData: { title: 'erd tree', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/gloom.mp3',
+    metaData: { title: 'gloom', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/kensuke ushio would be proud.mp3',
+    metaData: { title: 'kensuke ushio would be proud', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/kishhhy hella quiet.mp3',
+    metaData: { title: 'kishhhy hella quiet', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/lofitry.mp3',
+    metaData: { title: 'lofitry', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/move along.mp3',
+    metaData: { title: 'move along', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/psycho.mp3',
+    metaData: { title: 'psycho', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/Queencard - i-dle (OTAHOC Remix).mp3',
     metaData: {
-      title: 'yesu - have fun remix',
+      title: 'Queencard - i-dle (OTAHOC Remix)',
       artist: 'me',
       album,
     },
   },
   {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Eclectek_-_02_-_We_Are_Going_To_Eclecfunk_Your_Ass.mp3',
-    duration: 190.093061,
+    url: '{Audio_Base}/sad songs.mp3',
+    metaData: { title: 'sad songs', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/sighano.mp3',
+    metaData: { title: 'sighano', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/sleep.mp3',
+    metaData: { title: 'sleep', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/unlearning.mp3',
+    metaData: { title: 'unlearning', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/updated psycho.mp3',
+    metaData: { title: 'updated psycho', artist: 'me', album },
+  },
+  {
+    url: '{Audio_Base}/ギターと孤独と蒼い惑星 piano lofi!.mp3',
     metaData: {
-      title: 'We Are Going To Eclecfunk Your Ass',
-      artist: 'Eclectek',
+      title: 'ギターと孤独と蒼い惑星 piano lofi!',
+      artist: 'me',
       album,
     },
   },
   {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Auto-Pilot_-_03_-_Seventeen.mp3',
-    duration: 214.622041,
+    url: '',
+    duration: 0,
     metaData: {
-      title: 'Seventeen',
-      artist: 'Auto-Pilot',
-      album,
-    },
-  },
-  {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Muha_-_04_-_Microphone.mp3',
-    duration: 181.838367,
-    metaData: {
-      title: 'Microphone',
-      artist: 'Muha',
-      album,
-    },
-  },
-  {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Just_Plain_Ant_-_05_-_Stumble.mp3',
-    duration: 86.047347,
-    metaData: {
-      title: 'Stumble',
-      artist: 'Just Plain Ant',
-      album,
-    },
-  },
-  {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Sleaze_-_06_-_God_Damn.mp3',
-    duration: 226.795102,
-    metaData: {
-      title: 'God Damn',
-      artist: 'Sleaze',
-      album,
-    },
-  },
-  {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Juanitos_-_07_-_Hola_Hola_Bossa_Nova.mp3',
-    duration: 207.072653,
-    metaData: {
-      title: 'Hola Hola Bossa Nova',
-      artist: 'Juanitos',
-      album,
-    },
-  },
-  {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Entertainment_for_the_Braindead_-_08_-_Resolutions_Chris_Summer_Remix.mp3',
-    duration: 314.331429,
-    metaData: {
-      title: 'Resolutions (Chris Summer Remix)',
-      artist: 'Entertainment for the Braindead',
-      album,
-    },
-  },
-  {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Nobara_Hayakawa_-_09_-_Trail.mp3',
-    duration: 204.042449,
-    metaData: {
-      title: 'Trail',
-      artist: 'Nobara Hayakawa',
-      album,
-    },
-  },
-  {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Paper_Navy_-_10_-_Tongue_Tied.mp3',
-    duration: 201.116735,
-    metaData: {
-      title: 'Tongue Tied',
-      artist: 'Paper Navy',
-      album,
-    },
-  },
-  {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/60_Tigres_-_11_-_Garage.mp3',
-    duration: 245.394286,
-    metaData: {
-      title: 'Garage',
-      artist: '60 Tigres',
-      album,
-    },
-  },
-  {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/CM_aka_Creative_-_12_-_The_Cycle_Featuring_Mista_Mista.mp3',
-    duration: 221.44,
-    metaData: {
-      title: 'The Cycle (Featuring Mista Mista)',
-      artist: 'CM aka Creative',
+      title:
+        'try automating soundcloud post -> crawling cloudflare worker -> upload to r2 -> add here',
+      artist: 'note to self',
       album,
     },
   },
 ];
+
+export const initialTracks = rawTracks.map(t => ({
+  ...t,
+  url: proxyUrl(withBase(t.url)),
+}));

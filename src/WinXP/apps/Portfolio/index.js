@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import hthBanner from '../../../assets/banners/hth.png';
 import synfinyBanner from '../../../assets/banners/synfiny.jpg';
@@ -12,6 +12,8 @@ export default function Portfolio({ items }) {
       title: 'Capital Technology Networks — VP Software',
       description:
         'Led 2025 UI refresh for Track the Hack; reworked registration/admission/scheduling workflows; built an automated photo booth with email; contributed to HackTheHill III website.',
+      subdescription:
+        'Really wanted to be a part of something larger than me, and at Capital Technology Networks -- leading and architecturing systems is something I like doing!',
       background: hthBanner,
       tags: ['Leadership', 'Web', 'Automation', 'UI/UX'],
       type: 'project',
@@ -100,6 +102,7 @@ export default function Portfolio({ items }) {
       title: 'Engineering Intern — SynFiny Advisors',
       description:
         'Designed and deployed ResumeGPT on AWS; integrated WildApricot for automated resume ingestion; maintained codebase and roadmap; stakeholder communications. Jul–Sep 2024 · Remote, USA',
+      background: synfinyBanner,
       tags: ['Python', 'AWS', 'APIs', 'Flask'],
       type: 'position',
       date: "July '24 - September '24",
@@ -125,6 +128,22 @@ export default function Portfolio({ items }) {
   // Expanded view state
   const [activeIdx, setActiveIdx] = useState(null);
   const [notes, setNotes] = useState({}); // key -> text
+
+  // Scale hero image based on the app window (overlay body) size
+  const overlayBodyRef = useRef(null);
+  const [heroMaxPx, setHeroMaxPx] = useState(320);
+  useEffect(() => {
+    const el = overlayBodyRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(entries => {
+      const h = entries[0]?.contentRect?.height || 0;
+      // Use ~40% of overlay body height, clamped between 160px and 520px
+      const px = Math.max(160, Math.min(Math.round(h * 0.4), 520));
+      setHeroMaxPx(px);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [activeIdx]);
 
   useEffect(() => {
     try {
@@ -292,23 +311,20 @@ export default function Portfolio({ items }) {
               <CloseButton onClick={handleClose}>Close</CloseButton>
             </div>
           </OverlayHeader>
-          <OverlayBody>
+          <OverlayBody ref={overlayBodyRef}>
             {(data[activeIdx]?.image || data[activeIdx]?.background) && (
               <Hero
                 src={data[activeIdx].image || data[activeIdx].background}
                 alt={data[activeIdx].title}
+                style={{ maxHeight: heroMaxPx }}
               />
             )}
             <LargeDesc>
               {data[activeIdx]?.description || 'No description provided.'}
             </LargeDesc>
-            <Editor
-              placeholder="Write more about this project..."
-              value={notes[getKey(activeIdx)] || ''}
-              onChange={handleEditChange}
-              spellCheck={false}
-              aria-label="Portfolio editor"
-            />
+            {data[activeIdx]?.subdescription && (
+              <SubDesc>{data[activeIdx].subdescription}</SubDesc>
+            )}
           </OverlayBody>
         </Overlay>
       )}
@@ -500,7 +516,7 @@ const OverlayBody = styled.div`
 
 const Hero = styled.img`
   width: 100%;
-  max-height: 40vh;
+  /* max-height is set dynamically via inline style based on overlay size */
   object-fit: cover;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
@@ -509,6 +525,13 @@ const LargeDesc = styled.div`
   padding: 10px 12px 0;
   color: #222;
   font-size: 13px;
+`;
+
+const SubDesc = styled.div`
+  padding: 6px 12px 0;
+  color: #333;
+  font-size: 12px;
+  opacity: 0.9;
 `;
 
 const Editor = styled.textarea`
