@@ -221,6 +221,17 @@ function WinXP() {
     );
     dispatch({ type: ADD_APP, payload: appSetting });
   }
+  // helper so apps can request opening other apps by key or component
+  const openApp = useCallback(target => {
+    if (typeof target === 'string' && appSettings[target]) {
+      dispatch({ type: ADD_APP, payload: appSettings[target] });
+      return;
+    }
+    const setting = Object.values(appSettings).find(
+      s => s.component === target,
+    );
+    if (setting) dispatch({ type: ADD_APP, payload: setting });
+  }, []);
   function getFocusedAppId() {
     if (state.focusing !== FOCUSING.WINDOW) return -1;
     const focusedApp = [...state.apps]
@@ -308,6 +319,7 @@ function WinXP() {
         onMinimize={onMinimizeWindow}
         onMaximize={onMaximizeWindow}
         focusedAppId={focusedAppId}
+        openApp={openApp}
       />
       <Footer
         apps={state.apps}

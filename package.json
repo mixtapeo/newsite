@@ -21,12 +21,6 @@
     "now-build": "react-scripts build",
     "lint": "eslint src"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": [
     ">0.2%",
     "not dead",

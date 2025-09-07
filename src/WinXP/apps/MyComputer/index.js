@@ -25,14 +25,29 @@ import pullup from 'assets/windowsIcons/pullup.png';
 import logo from 'assets/github-logo.png';
 import mine from 'assets/minesweeper/mine-icon.png';
 import windows from 'assets/windowsIcons/windows.png';
+import docLarge from 'assets/windowsIcons/doc.png'; 
 
-function MyComputer({ onClose }) {
+function MyComputer({ onClose, openApp }) {
   function onClickOptionItem(item) {
     switch (item) {
       case 'Close':
         onClose();
         break;
       default:
+    }
+  }
+  function openResume(e) {
+    if (e) e.preventDefault();
+    if (openApp) openApp('my resume.doc');
+  }
+  function openPortfolio(e) {
+    if (e) e.preventDefault();
+    if (openApp) openApp('portfolio.exe');
+  }
+  function onKeyActivate(e, handler) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handler();
     }
   }
   return (
@@ -333,13 +348,43 @@ function MyComputer({ onClose }) {
                 </div>
               </div>
             </div>
-            <div className="com__content__right__card com__content__right__card--me">
+            <div className="com__content__right__car">
               <div className="com__content__right__card__header">
                 Important links!
               </div>
               <div className="com__content__right__card__content">
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={openResume}
+                  onKeyDown={e => onKeyActivate(e, openResume)}
+                  className="com__content__right__card__item--me"
+                >
+                  <img
+                    className="com__content__right__card__img"
+                    src={docLarge}
+                    alt="Resume"
+                  />
+                  <div className="com__content__right__card__text">Resume</div>
+                </div>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={openPortfolio}
+                  onKeyDown={e => onKeyActivate(e, openPortfolio)}
+                  className="com__content__right__card__item--me"
+                >
+                  <img
+                    className="com__content__right__card__img"
+                    src="https://a.ppy.sh/2926513_1448497605.png"
+                    alt="Portfolio"
+                  />
+                  <div className="com__content__right__card__text">
+                    My Portfolio / Projects
+                  </div>
+                </div>
                 <a
-                  href="https://github.com/mixtapeo"
+                  href="https://github.com/"
                   target="_blank"
                   rel="noreferrer"
                   className="com__content__right__card__item--me"
@@ -347,24 +392,9 @@ function MyComputer({ onClose }) {
                   <img
                     className="com__content__right__card__img"
                     src={logo}
-                    alt="control"
+                    alt="GitHub"
                   />
-                  <div className="com__content__right__card__text">Github</div>
-                </a>
-                <a
-                  href="https://sh1zuku.csie.io"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="com__content__right__card__item--me"
-                >
-                  <img
-                    className="com__content__right__card__img"
-                    src="https://a.ppy.sh/2926513_1448497605.png"
-                    alt="control"
-                  />
-                  <div className="com__content__right__card__text">
-                    My Website
-                  </div>
+                  <div className="com__content__right__card__text">GitHub</div>
                 </a>
               </div>
             </div>

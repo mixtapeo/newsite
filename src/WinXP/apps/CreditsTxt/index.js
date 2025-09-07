@@ -6,7 +6,8 @@ export default function CreditsTxt() {
             github
                   href="https://github.com/ShizukuIchi"
             site
-                  href="https://sh1zuku.csie.io"`;
+                  href="https://sh1zuku.csie.io"
+            thank you for the React WinXP implementation :)`;
 
   return (
     <Div>

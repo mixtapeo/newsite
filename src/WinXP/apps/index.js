@@ -7,6 +7,7 @@ import Winamp from './Winamp';
 import Paint from './Paint';
 import Resume from './Resume';
 import CreditsTxt from './CreditsTxt';
+import Portfolio from './Portfolio';
 import iePaper from 'assets/windowsIcons/ie-paper.png';
 import ie from 'assets/windowsIcons/ie.png';
 import mine from 'assets/minesweeper/mine-icon.png';
@@ -170,6 +171,13 @@ export const defaultIconState = [
     icon: notepadLarge,
     title: 'credits.txt',
     component: CreditsTxt,
+    isFocus: false,
+  },
+  {
+    id: 8,
+    icon: computerLarge,
+    title: 'portfolio.exe',
+    component: Portfolio,
     isFocus: false,
   },
 ];
@@ -349,6 +357,25 @@ export const appSettings = {
     maximized: false,
     multiInstance: false,
   },
+  'portfolio.exe': {
+    header: {
+      icon: computer,
+      title: 'portfolio.exe',
+    },
+    component: Portfolio,
+    defaultSize: {
+      width: 700,
+      height: 500,
+    },
+    defaultOffset: {
+      x: 300,
+      y: 140,
+    },
+    resizable: true,
+    minimized: false,
+    maximized: window.innerWidth < 800,
+    multiInstance: false,
+  },
 };
 
-export { InternetExplorer, Minesweeper, ErrorBox, MyComputer, Notepad, Winamp, Paint, Resume, CreditsTxt };
+export { InternetExplorer, Minesweeper, ErrorBox, MyComputer, Notepad, Winamp, Paint, Resume, CreditsTxt, Portfolio };

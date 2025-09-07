@@ -12,6 +12,7 @@ function Windows({
   onMinimize,
   onMaximize,
   focusedAppId,
+  openApp,
 }) {
   return (
     <div style={{ position: 'relative', zIndex: 0 }}>
@@ -24,8 +25,9 @@ function Windows({
           onMouseUpClose={onClose}
           onMouseUpMinimize={onMinimize}
           onMouseUpMaximize={onMaximize}
-          isFocus={focusedAppId === app.id} // for styledWindow
+          isFocus={focusedAppId === app.id}
           {...app}
+          openApp={openApp}
         />
       ))}
     </div>
@@ -48,6 +50,7 @@ const Window = memo(function({
   zIndex,
   isFocus,
   className,
+  openApp,
 }) {
   function _onMouseDown() {
     onMouseDown(id);
@@ -134,6 +137,7 @@ const Window = memo(function({
           onClose: _onMouseUpClose,
           onMinimize: _onMouseUpMinimize,
           isFocus,
+          openApp,
           ...injectProps,
         })}
       </div>
