@@ -385,7 +385,7 @@ function MyComputer({ onClose, openApp }) {
                   </div>
                 </div>
                 <a
-                  href="https://github.com/"
+                  href="https://github.com/mixtapeo"
                   target="_blank"
                   rel="noreferrer"
                   className="com__content__right__card__item--me"

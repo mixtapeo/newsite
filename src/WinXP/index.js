@@ -192,17 +192,50 @@ function WinXP() {
   }, []);
   const isMobile = width <= MOBILE_BREAKPOINT;
 
+  // helper: build payload with centered offset on mobile
+  const buildAppPayload = useCallback((setting) => {
+    if (!setting) return setting;
+    if (!isMobile) return setting;
+    if (setting.equal('Winamp')) return setting;
+    const viewportW = typeof window !== 'undefined' ? window.innerWidth : 1024;
+    const viewportH = typeof window !== 'undefined' ? window.innerHeight : 768;
+    const w = setting?.defaultSize?.width || 0;
+    const h = setting?.defaultSize?.height || 0;
+    const availableH = Math.max(1, viewportH - BANNER_HEIGHT);
+    const x = Math.max(1, Math.round(viewportW / 2 - (w || 0) / 2));
+    const y = Math.max(1, Math.round(availableH / 2 - (h || 0) / 2));
+    return {
+      ...setting,
+      defaultOffset: { x, y },
+      // maximize by default on mobile
+      maximized: true,
+    };
+  }, [isMobile]);
+
   // use lazy init so mobile doesn't pop apps on first paint
   const [state, dispatch] = useReducer(
     reducer,
     null,
     () => {
-      const w = typeof window !== 'undefined' ? window.innerWidth : 1024;
-      const initialApps = w <= MOBILE_BREAKPOINT
+      const vw = typeof window !== 'undefined' ? window.innerWidth : 1024;
+      const initialFiltered = vw <= MOBILE_BREAKPOINT
         ? defaultAppState.filter(
             a => a?.header?.title !== 'Minesweeper' && a?.header?.title !== 'Internet Explorer',
           )
         : defaultAppState;
+      // center any pre-opened apps on mobile
+      const initialApps = vw <= MOBILE_BREAKPOINT
+        ? initialFiltered.map(s => {
+            const viewportW = typeof window !== 'undefined' ? window.innerWidth : 1024;
+            const viewportH = typeof window !== 'undefined' ? window.innerHeight : 768;
+            const w = s?.defaultSize?.width || 0;
+            const h = s?.defaultSize?.height || 0;
+            const availableH = Math.max(1, viewportH - BANNER_HEIGHT);
+            const x = Math.max(1, Math.round(viewportW / 2 - (w || 0) / 2));
+            const y = Math.max(1, Math.round(availableH / 2 - (h || 0) / 2));
+            return { ...s, defaultOffset: { x, y }, maximized: true };
+          })
+        : initialFiltered;
       return {
         apps: initialApps,
         nextAppID: initialApps.length,
@@ -258,19 +291,19 @@ function WinXP() {
     const appSetting = Object.values(appSettings).find(
       setting => setting.component === component,
     );
-    dispatch({ type: ADD_APP, payload: appSetting });
+    dispatch({ type: ADD_APP, payload: buildAppPayload(appSetting) });
   }
   // helper so apps can request opening other apps by key or component
   const openApp = useCallback(target => {
     if (typeof target === 'string' && appSettings[target]) {
-      dispatch({ type: ADD_APP, payload: appSettings[target] });
+      dispatch({ type: ADD_APP, payload: buildAppPayload(appSettings[target]) });
       return;
     }
     const setting = Object.values(appSettings).find(
       s => s.component === target,
     );
-    if (setting) dispatch({ type: ADD_APP, payload: setting });
-  }, []);
+    if (setting) dispatch({ type: ADD_APP, payload: buildAppPayload(setting) });
+  }, [buildAppPayload]);
   function getFocusedAppId() {
     if (state.focusing !== FOCUSING.WINDOW) return -1;
     const focusedApp = [...state.apps]
@@ -283,17 +316,17 @@ function WinXP() {
   }
   function onClickMenuItem(o) {
     if (o === 'Internet')
-      dispatch({ type: ADD_APP, payload: appSettings['Internet Explorer'] });
+      dispatch({ type: ADD_APP, payload: buildAppPayload(appSettings['Internet Explorer']) });
     else if (o === 'Minesweeper')
-      dispatch({ type: ADD_APP, payload: appSettings.Minesweeper });
+      dispatch({ type: ADD_APP, payload: buildAppPayload(appSettings.Minesweeper) });
     else if (o === 'My Computer')
-      dispatch({ type: ADD_APP, payload: appSettings['My Computer'] });
+      dispatch({ type: ADD_APP, payload: buildAppPayload(appSettings['My Computer']) });
     else if (o === 'Notepad')
-      dispatch({ type: ADD_APP, payload: appSettings.Notepad });
+      dispatch({ type: ADD_APP, payload: buildAppPayload(appSettings.Notepad) });
     else if (o === 'Winamp')
-      dispatch({ type: ADD_APP, payload: appSettings.Winamp });
+      dispatch({ type: ADD_APP, payload: buildAppPayload(appSettings.Winamp) });
     else if (o === 'Paint')
-      dispatch({ type: ADD_APP, payload: appSettings.Paint });
+      dispatch({ type: ADD_APP, payload: buildAppPayload(appSettings.Paint) });
     else if (o === 'Log Off')
       dispatch({ type: POWER_OFF, payload: POWER_STATE.LOG_OFF });
     else if (o === 'Turn Off Computer')
