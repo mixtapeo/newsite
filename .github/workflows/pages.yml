@@ -47,6 +47,7 @@ jobs:
           CI: false
           DISABLE_ESLINT_PLUGIN: true
           SKIP_PREFLIGHT_CHECK: true
+          REACT_APP_AUDIO_BASE: ${{ secrets.REACT_APP_AUDIO_BASE }}
 
       - name: Add SPA 404 fallback
         run: cp build/index.html build/404.html
