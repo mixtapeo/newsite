@@ -5,7 +5,7 @@ const album = 'netBloc Vol. 24: tiuqottigeloot';
 export const initialTracks = [
   {
     url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Diablo_Swing_Orchestra_-_01_-_Heroines.mp3',
+      'https://drive.google.com/file/d/1t_Mye8yOI_btbwFE4z_SCAgUeX8u5wI1/preview',
     duration: 322.612245,
     metaData: {
       title: 'Heroines',

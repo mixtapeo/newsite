@@ -335,11 +335,11 @@ function MyComputer({ onClose }) {
             </div>
             <div className="com__content__right__card com__content__right__card--me">
               <div className="com__content__right__card__header">
-                About Me :)
+                Important links!
               </div>
               <div className="com__content__right__card__content">
                 <a
-                  href="https://github.com/ShizukuIchi"
+                  href="https://github.com/mixtapeo"
                   target="_blank"
                   rel="noreferrer"
                   className="com__content__right__card__item--me"
