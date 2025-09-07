@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useCallback } from 'react';
+import React, { useReducer, useRef, useCallback, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import useMouse from 'react-use/lib/useMouse';
 
@@ -24,6 +24,10 @@ import Windows from './Windows';
 import Icons from './Icons';
 import { DashedBox } from 'components';
 
+// centralize mobile tuning
+const MOBILE_BREAKPOINT = 768; // px
+const BANNER_HEIGHT = 32; // px
+
 const initState = {
   apps: defaultAppState,
   nextAppID: defaultAppState.length,
@@ -33,6 +37,7 @@ const initState = {
   selecting: false,
   powerState: POWER_STATE.START,
 };
+
 const reducer = (state, action = { type: '' }) => {
   switch (action.type) {
     case ADD_APP:
@@ -174,7 +179,41 @@ const reducer = (state, action = { type: '' }) => {
   }
 };
 function WinXP() {
-  const [state, dispatch] = useReducer(reducer, initState);
+  // mobile detection
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+  function handleWindowSizeChange() {
+    setWidth(typeof window !== 'undefined' ? window.innerWidth : 1024);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+  const isMobile = width <= MOBILE_BREAKPOINT;
+
+  // use lazy init so mobile doesn't pop apps on first paint
+  const [state, dispatch] = useReducer(
+    reducer,
+    null,
+    () => {
+      const w = typeof window !== 'undefined' ? window.innerWidth : 1024;
+      const initialApps = w <= MOBILE_BREAKPOINT
+        ? defaultAppState.filter(
+            a => a?.header?.title !== 'Minesweeper' && a?.header?.title !== 'Internet Explorer',
+          )
+        : defaultAppState;
+      return {
+        apps: initialApps,
+        nextAppID: initialApps.length,
+        nextZIndex: initialApps.length,
+        focusing: initialApps.length ? FOCUSING.WINDOW : FOCUSING.DESKTOP,
+        icons: defaultIconState,
+        selecting: false,
+        powerState: POWER_STATE.START,
+      };
+    },
+  );
   const ref = useRef(null);
   const mouse = useMouse(ref);
   const focusedAppId = getFocusedAppId();
@@ -301,6 +340,9 @@ function WinXP() {
       onMouseDown={onMouseDownDesktop}
       state={state.powerState}
     >
+      {isMobile && (
+        <MobileBanner>Get a bigger screen, otherwise site will suck.</MobileBanner>
+      )}
       <Icons
         icons={state.icons}
         onMouseDown={onMouseDownIcon}
@@ -368,6 +410,31 @@ const Container = styled.div`
   *:not(input):not(textarea) {
     user-select: none;
   }
+  @media (max-width: ${MOBILE_BREAKPOINT}px) {
+    height: 100dvh; /* safer for mobile viewport */
+    padding-top: ${BANNER_HEIGHT}px;
+    padding-top: calc(${BANNER_HEIGHT}px + env(safe-area-inset-top));
+    box-sizing: border-box;
+  }
+`;
+
+const MobileBanner = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  min-height: ${BANNER_HEIGHT}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  font-size: 12px;
+  text-align: center;
+  color: #5a3d00;
+  background: linear-gradient(to bottom, #fff8cc 0%, #ffe58a 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  pointer-events: none; /* avoid blocking clicks underneath */
 `;
 
 export default WinXP;
