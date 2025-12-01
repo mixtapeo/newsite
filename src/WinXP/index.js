@@ -357,7 +357,28 @@ function WinXP() {
     [dispatch],
   );
   function onClickModalButton(text) {
+    // Close the power dialog / modal first
     dispatch({ type: CANCEL_POWER_OFF });
+    // If user clicked "Turn Off" (confirm), attempt to close the browser window.
+    // window.close() often only works on windows opened via script; attempt a few fallbacks.
+    if (text === 'Turn Off') {
+      try {
+        // Try simple close first
+        window.close();
+      } catch (e) {
+        // ignore
+      }
+      try {
+        // on newer browser, "scripts may close only the windows that were opened by them." so try to call original script to close.
+        // window.open('', '_self', '');
+        // window.close();
+        //i give up
+      } catch (e) {
+        // ignore
+      }
+      return;
+    }
+    // For other actions, show the builtin error window for now
     dispatch({
       type: ADD_APP,
       payload: appSettings.Error,

@@ -72,18 +72,18 @@ export default function Portfolio({ items }) {
 
     // Positions
     {
-      title: 'Global Head of IT — SynFiny Advisors',
+      title: 'IT Contractor — SynFiny Advisors',
       description:
-        'Owned IT security and infrastructure; managed identity/access in Microsoft Entra; optimized Office 365 licensing; ran phishing simulations; drove security decisions; day-to-day IT support. Jun 2025–Present · Remote, USA',
+        'Got the opportunity to manage IT for a small business (100ish users). Sent out phishing emails (yay) every month, made some reports every month for bill reconciliation. Got to use M365 Entra and Admin to manage users logins.',
       background: synfinyBanner,
       tags: ['IT', 'Security', 'Microsoft Entra', 'Office 365'],
       type: 'position',
-      date: "June '25 - Present",
+      date: "June '25 - Dec '25",
     },
     {
       title: 'Software Engineering Intern — Infras',
       description:
-        'Maintained Playwright + Jenkins E2E framework across client environments; built a DFS-based autonomous form navigator (10+ pages) to eliminate repetitive manual testing. Mar 2025–Present · Remote, USA',
+        'Responsible for maintaining a Playwright project for automating Infras\' forms automation. Suggested the change of creating formula-type functions for Xpaths, instead of (previously) hardcoding them, saving lots of dev time. Later helped in configuring Jenkins runs for other projects. \nBuilt a DFS-based autonomous form navigator that I\'m semi-proud of, but wasn\'t used.',
       background:
         'https://cdn.prod.website-files.com/67b4b38e2d5645738ce41c68/68b9f6a16d7921b0bf40453a_img_0.png',
       tags: ['Playwright', 'Jenkins', 'Test Automation'],
@@ -408,6 +408,7 @@ const Desc = styled.div`
   color: ${p => (p.$onImage ? '#fff' : '#222')};
   text-shadow: ${p => (p.$onImage ? '0 1px 2px rgba(0,0,0,0.6)' : 'none')};
   line-height: 1.35;
+  white-space: pre-line; /* honor \n for line breaks */
 `;
 
 const Tags = styled.div`
@@ -515,6 +516,7 @@ const LargeDesc = styled.div`
   padding: 10px 12px 0;
   color: #222;
   font-size: 13px;
+  white-space: pre-line; /* honor \n for line breaks */
 `;
 
 const SubDesc = styled.div`
@@ -522,6 +524,7 @@ const SubDesc = styled.div`
   color: #333;
   font-size: 12px;
   opacity: 0.9;
+  white-space: pre-line; /* honor \n for line breaks */
 `;
 
 const Editor = styled.textarea`
